@@ -1,45 +1,45 @@
-import './blog.css';
-import { useState, useEffect } from 'react';
-import blogService from '../services/blogs';
+import './blog.css'
+import { useState, useEffect } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, setBlogs }) => {
-  const [infoVisible, setInfoVisible] = useState(false);
-  const showWhenVisible = { display: infoVisible ? '' : 'none' };
-  const [likesCount, setLikesCount] = useState(blog.likes);
+  const [infoVisible, setInfoVisible] = useState(false)
+  const showWhenVisible = { display: infoVisible ? '' : 'none' }
+  const [likesCount, setLikesCount] = useState(blog.likes)
 
   useEffect(() => {
-    setLikesCount(blog.likes);
-  }, [blog]);
+    setLikesCount(blog.likes)
+  }, [blog])
 
   const handleLike = async (id) => {
     try {
-      console.log('user', user.id);
+      console.log('user', user.id)
       const updatedBlog = {
         user: user.id,
         likes: blog.likes + 1,
         author: blog.author,
         title: blog.title,
         url: blog.url
-      };
+      }
 
-      console.log(updatedBlog);
-      const returnedBlog = await blogService.update(id, updatedBlog);
-      setLikesCount(returnedBlog.likes);
+      console.log(updatedBlog)
+      const returnedBlog = await blogService.update(id, updatedBlog)
+      setLikesCount(returnedBlog.likes)
     } catch (exception) {
-      console.error('Error liking the blog', exception);
+      console.error('Error liking the blog', exception)
     }
-  };
+  }
 
   const handleDelete = async () => {
     if (window.confirm(`Are you sure you want to delete "${blog.title}" by ${blog.author}?`)) {
       try {
-        await blogService.remove(blog.id);
-        setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blog.id));
+        await blogService.remove(blog.id)
+        setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blog.id))
       } catch (exception) {
-        console.error('Error deleting the blog', exception);
+        console.error('Error deleting the blog', exception)
       }
     }
-  };
+  }
 
   return (
     <div className="single-blog">
@@ -63,7 +63,7 @@ const Blog = ({ blog, user, setBlogs }) => {
         <button onClick={handleDelete}>remove</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
