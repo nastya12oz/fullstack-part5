@@ -1,6 +1,6 @@
-import './blog.css'
 import { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
+import React from 'react'
 
 const Blog = ({ blog, user, setBlogs }) => {
   const [infoVisible, setInfoVisible] = useState(false)
@@ -13,7 +13,6 @@ const Blog = ({ blog, user, setBlogs }) => {
 
   const handleLike = async (id) => {
     try {
-      console.log('user', user.id)
       const updatedBlog = {
         user: user.id,
         likes: blog.likes + 1,
@@ -22,7 +21,6 @@ const Blog = ({ blog, user, setBlogs }) => {
         url: blog.url
       }
 
-      console.log(updatedBlog)
       const returnedBlog = await blogService.update(id, updatedBlog)
       setLikesCount(returnedBlog.likes)
     } catch (exception) {
@@ -41,26 +39,29 @@ const Blog = ({ blog, user, setBlogs }) => {
     }
   }
 
+
   return (
-    <div className="single-blog">
+    <div className="single-blog" data-likes={blog.likes}>
       <p>
-        <b>title</b> {blog.title}
+        <b className="blog-title">title</b> {blog.title}
         <button onClick={() => setInfoVisible(!infoVisible)}>
           {infoVisible ? 'hide' : 'show more'}
         </button>
       </p>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="blog-details">
         <div>
-          <b>author</b> {blog.author}
+          <b className="blog-author">author</b> {blog.author}
         </div>
-        <div>
+        <div className="blog-url">
           <b>url</b> {blog.url}
         </div>
-        <div>
-          <span>likes {likesCount}</span>
-          <button onClick={() => handleLike(blog.id)}>like</button>
+        <div className="blog-likes">
+          <span id="likesCount">likes {likesCount}</span>
+          <button id="likeButton" onClick={() => handleLike(blog.id)}>like</button>
         </div>
-        <button onClick={handleDelete}>remove</button>
+        {blog?.user?.id === user?.id && (
+  <button id="removeButton" onClick={handleDelete}>remove</button>
+)} 
       </div>
     </div>
   )

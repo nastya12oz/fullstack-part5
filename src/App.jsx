@@ -17,8 +17,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
-    console.log(blogs)
-  }, [blogs])
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -29,7 +28,6 @@ const App = () => {
       blogService.getAll().then((blogs) => setBlogs(blogs))
     }
   }, [])
-
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -62,17 +60,20 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService.create(blogObject)
+      console.log('created blog', createdBlog)
       setBlogs(blogs.concat(createdBlog))
       setNotification({ message: `A new blog "${createdBlog.title}" by ${createdBlog.author} added`, type: 'success' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (exception) {
+      console.log(exception) // This will log the error object to your console.
       setNotification({ message: 'Failed to add blog', type: 'error' })
-    } finally {
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     }
   }
-
 
 
   const logout = () => {
